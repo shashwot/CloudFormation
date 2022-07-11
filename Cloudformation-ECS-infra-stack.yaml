@@ -153,24 +153,32 @@ Resources:
       NatGatewayId: !Ref NAT
 
   PublicSubnetOneRouteTableAssociation:
+    DependsOn:  
+      - PublicRouteTable 
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
       SubnetId: !Ref PublicSubnetOne
       RouteTableId: !Ref PublicRoute
 
   PublicSubnetTwoRouteTableAssociation:
+    DependsOn:  
+        - PublicRouteTable
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
       SubnetId: !Ref PublicSubnetTwo
       RouteTableId: !Ref PublicRoute
 
   PrivateSubnetOneRouteTableAssociation:
+    DependsOn:  
+      - PrivateRouteTable
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
       SubnetId: !Ref PrivateSubnetOne
       RouteTableId: !Ref PrivateRoute
 
   PrivateSubnetTwoRouteTableAssociation:
+    DependsOn:  
+      - PrivateRouteTable
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
       SubnetId: !Ref PrivateSubnetTwo
