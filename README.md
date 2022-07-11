@@ -1,2 +1,2 @@
 # CloudFormation
-cloudformation for AWS
+cloudformation for AWS.
