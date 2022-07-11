@@ -88,7 +88,11 @@ Resources:
 
 # Create and Attach Internet Gateway
   InternetGateway:
-    Type: AWS::EC2::InternetGateway 
+    Type: AWS::EC2::InternetGateway
+    Properties:
+      Tags:
+      - Key: Name
+        Value: DemoVpc-IG
   
   GatewayAttachment:
     Type: AWS::EC2::VPCGatewayAttachment 
@@ -125,7 +129,7 @@ Resources:
   PublicRouteTable:
     Type: AWS::EC2::RouteTable
     Properties:
-      VpcId: !Ref DemoVPC 
+      VpcId: !Ref DemoVPC
       Tags :
       - Key : Name
         Value : DemoVpc-PublicRouteTable
@@ -142,23 +146,23 @@ Resources:
     Type: AWS::EC2::Route 
     Properties:
       RouteTableId: !Ref PublicRouteTable
-      DestinationCidrBlock: '0.0.0.0/0' 
+      DestinationCidrBlock: '0.0.0.0/0'
       GatewayId: !Ref InternetGateway  
 
   PrivateRoute:
     Type: AWS::EC2::Route 
     Properties:
       RouteTableId: !Ref PrivateRouteTable
-      DestinationCidrBlock: '0.0.0.0/0' 
+      DestinationCidrBlock: '0.0.0.0/0'
       NatGatewayId: !Ref NAT
 
   PublicSubnetOneRouteTableAssociation:
-    DependsOn:  
+    DependsOn:
       - PublicRouteTable 
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
       SubnetId: !Ref PublicSubnetOne
-      RouteTableId: !Ref PublicRoute
+      RouteTableId: !Ref PublicRouteTable
 
   PublicSubnetTwoRouteTableAssociation:
     DependsOn:  
@@ -166,7 +170,7 @@ Resources:
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
       SubnetId: !Ref PublicSubnetTwo
-      RouteTableId: !Ref PublicRoute
+      RouteTableId: !Ref PublicRouteTable
 
   PrivateSubnetOneRouteTableAssociation:
     DependsOn:  
@@ -174,7 +178,7 @@ Resources:
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
       SubnetId: !Ref PrivateSubnetOne
-      RouteTableId: !Ref PrivateRoute
+      RouteTableId: !Ref PrivateRouteTable
 
   PrivateSubnetTwoRouteTableAssociation:
     DependsOn:  
@@ -182,7 +186,7 @@ Resources:
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
       SubnetId: !Ref PrivateSubnetTwo
-      RouteTableId: !Ref PrivateRoute
+      RouteTableId: !Ref PrivateRouteTable
 
 
 # Create ECS Cluster
@@ -409,3 +413,7 @@ Outputs:
     Value: !Join ['', ['http://', !GetAtt 'PublicLoadBalancer.DNSName']]
     Export:
       Name: !Join [ ':', [ !Ref 'AWS::StackName', 'ExternalUrl' ] ]  
+
+
+
+#Resource handler returned message: "The routeTable ID 'Farga-Publi-G37Z1GVRTRQ0' does not exist (Service: Ec2, Status Code: 400, Request ID: a653420d-8efe-4a40-89d3-fd07ffa5d193, Extended Request ID: null)" (RequestToken: f8e689d0-f99d-2532-20cb-3dac78e32ed4, HandlerErrorCode: NotFound)
