@@ -134,6 +134,6 @@ Outputs:
     Value: !Ref DemoSecurityGroup
     Condition: CreateDemoSecurityGroup
     Export:
-      Name: !Join [":", [!Ref 'AWS::StackName', DemoSSHGlobalSG]]
+      Name: !Join [":", [!Ref 'AWS::StackName', DemoSecurityGroup]]
 
   
