@@ -1,6 +1,6 @@
 AWSTemplateFormatVersion: 2010-09-09
 
-Description: Basic Ec2 Instances with Parameters, Mapping, Condition, Resources
+Description: Basic Ec2 Instances with Parameters, Mapping, Condition, Resources, Outputs
 
 Parameters:
   MyAvailabilityZone:
@@ -54,7 +54,12 @@ Resources:
           - CreateDemoSecurityGroup
           - !Ref DemoEnvSecurityGroup
           - !Ref ProdEnvSecurityGroup
-      AvailabilityZone: !Ref MyAvailabilityZone     
+       #  - !Ref AWS::NoValue 
+      AvailabilityZone: !Ref MyAvailabilityZone   
+      UserData: 
+        Fn::Base64: |  
+          #!/bin/bash
+          sudo yum update -y  
       Tags:
       - Key: Name 
         Value: Ec2-demo
@@ -111,5 +116,24 @@ Resources:
       Tags:
       - Key: Name
         Value: Prod-Eip
+
+Outputs:
+  MyInstanceId:
+    Description: My instance id
+    Value: !Ref EC2Instance
+  MyDNSName:
+    Description: My Public DNS Name
+    Value: !GetAtt EC2Instance.PublicDnsName
+  MyInstanceAvailabilityZone:
+    Description: Instance Availability Zone
+    Value: !GetAtt EC2Instance.AvailabilityZone    
+    Export:
+      Name: !Sub "${AWS::StackName}-InstanceAz"
+  SecurityGroup:
+    Description: Security-group
+    Value: !Ref DemoSecurityGroup
+    Condition: CreateDemoSecurityGroup
+    Export:
+      Name: !Join [":", [!Ref 'AWS::StackName', DemoSSHGlobalSG]]
 
   
